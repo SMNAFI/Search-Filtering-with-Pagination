@@ -2,7 +2,7 @@ import React from "react";
 
 const Users = ({ data }) => {
   return (
-    <table className="table table-hover">
+    <table className="table table-hover my-4">
       <thead>
         <tr>
           <th>First Name</th>

@@ -11,7 +11,12 @@ app.get("/", (req, res) => {
   const { q } = req.query;
   //   console.log(q);
 
-  // search on keys
+  // if search is based on a specific field. In this case it is first_name
+  // const search = (data) => {
+  //   return data.filter((user) => user.first_name.toLowerCase().includes(q));
+  // };
+
+  // search on multiple keys
   const keys = ["first_name", "last_name", "email"];
   const search = (data) => {
     return data.filter((user) =>
@@ -23,7 +28,7 @@ app.get("/", (req, res) => {
   res.json(search(Users));
 
   // sending only 10 data
-  //   res.json(search(Users).splice(0, 10));
+  //   res.json(search(Users).slice(0, 10));
 });
 
 app.listen(5000, () => {

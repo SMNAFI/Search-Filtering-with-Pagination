@@ -3,55 +3,54 @@ import { useEffect, useState } from "react";
 import Users from "./components/Users";
 // import { users } from "./users";
 import axios from "axios";
+import Loading from "./components/Loading";
+// import Pagination from "./components/Pagination";
+import PaginationMUI from "./components/PaginationMUI";
 
 function App() {
   const [query, setQuery] = useState("");
 
-  // if search is based on a specific field
+  // if search is based on a specific field (local data)
   // const search = (data) => {
   //   return data.filter((user) => user.first_name.toLowerCase().includes(query));
   // };
 
-  // if search is based on multiple fields
+  // console.log(users[0].first_name);
+  // console.log(users[0]["first_name"]);
+  // both are the way to access property.
+
+  // search based on multiple key..... (local data)
+  // const keys = ["first_name", "last_name", "email"];
   // const search = (data) => {
-  //   return data.filter(
-  //     (user) =>
-  //       user.first_name.toLowerCase().includes(query) ||
-  //       user.last_name.toLowerCase().includes(query) ||
-  //       user.email.toLowerCase().includes(query)
+  //   return data.filter((user) =>
+  //     keys.some((key) => user[key].toLowerCase().includes(query))
   //   );
   // };
 
-  // both are same.
-  // console.log(users[0].first_name);
-  // console.log(users[0]["first_name"]);
-
-  // best way of doing for multiple search key.....
-  const keys = ["first_name", "last_name", "email"];
-  const search = (data) => {
-    return data.filter((user) =>
-      keys.some((key) => user[key].toLowerCase().includes(query))
-    );
-  };
-
   // if data from API....
   const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const datePerPage = 10;
+
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       const res = await axios.get(`http://localhost:5000/?q=${query}`);
       setData(res.data);
+      setIsLoading(false);
     };
-
-    // if search bar is empty or search character is greater than 2
-    // if (query.length === 0 || query.length > 2) {
-    //   console.log(query);
-    //   fetchData();
-    // }
 
     fetchData();
   }, [query]);
 
-  console.log(data);
+  // get current data
+  const indexOfLastData = currentPage * datePerPage;
+  const indexOfFirstData = indexOfLastData - datePerPage;
+  // console.log(indexOfFirstData, indexOfLastData);
+  const currentData = data.slice(indexOfFirstData, indexOfLastData);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="app">
@@ -64,10 +63,31 @@ function App() {
           />
         </div>
         {/* if data from front end */}
-        {/* <Users data={search(users)} /> */}
+        {/* <Users data={currentData} /> */}
 
         {/* data from back end */}
-        <Users data={search(data)} />
+        {isLoading ? (
+          <Loading>Loading.....</Loading>
+        ) : (
+          <Users data={currentData} />
+        )}
+
+        <div className="pagination">
+          <PaginationMUI
+            dataPerPage={datePerPage}
+            totalData={data.length}
+            paginate={paginate}
+          />
+        </div>
+
+        {/* custom pagination component. need to fixed. */}
+        {/* <div>
+          <Pagination
+            dataPerPage={datePerPage}
+            totalData={data.length}
+            paginate={paginate}
+          />
+        </div> */}
       </div>
     </div>
   );
