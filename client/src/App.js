@@ -1,7 +1,8 @@
 import "./style.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Users from "./components/Users";
-import { users } from "./users";
+// import { users } from "./users";
+import axios from "axios";
 
 function App() {
   const [query, setQuery] = useState("");
@@ -33,6 +34,25 @@ function App() {
     );
   };
 
+  // if data from API....
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await axios.get(`http://localhost:5000/?q=${query}`);
+      setData(res.data);
+    };
+
+    // if search bar is empty or search character is greater than 2
+    // if (query.length === 0 || query.length > 2) {
+    //   console.log(query);
+    //   fetchData();
+    // }
+
+    fetchData();
+  }, [query]);
+
+  console.log(data);
+
   return (
     <div className="app">
       <div className="container">
@@ -43,7 +63,11 @@ function App() {
             onChange={(e) => setQuery(e.target.value)}
           />
         </div>
-        <Users data={search(users)} />
+        {/* if data from front end */}
+        {/* <Users data={search(users)} /> */}
+
+        {/* data from back end */}
+        <Users data={search(data)} />
       </div>
     </div>
   );
