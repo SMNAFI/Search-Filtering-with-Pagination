@@ -1,0 +1,37 @@
+$lightGreen: #b9e7e7;
+
+.app {
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    display: flex;
+    justify-content: center;
+    background-color: $lightGreen;
+    min-height: 100vh;
+
+    .container {
+        margin-top: 70px;
+        max-width: 75%;
+
+        div {
+            display: flex;
+            justify-content: center;
+            
+            input {
+                    padding: 12px 16px;
+                    margin-bottom: 50px;
+                    min-width: 500px;
+                    border: none;
+                    border-radius: 3px;
+                    border-bottom: 2px solid gray;
+            
+                    &:focus {
+                        outline: none;
+                    }
+                }
+        }
+    }
+}
